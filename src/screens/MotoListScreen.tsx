@@ -25,6 +25,21 @@ export function MotoListScreen() {
     }, [])
   );
 
+  function getStatusColor(status: string) {
+    switch (status) {
+      case 'quebrada':
+        return { color: '#FF5252' }; // vermelho
+      case 'parada':
+        return { color: '#FFA726' }; // laranja
+      case 'disponível':
+        return { color: '#2196F3' }; // azul
+      case 'alugada':
+        return { color: '#028220FF' }; // verde Mottu
+      default:
+        return { color: '#333' }; // fallback
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🏍️ Lista de Motos</Text>
@@ -35,7 +50,7 @@ export function MotoListScreen() {
           data={motos}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Detalhes da Moto', { moto: item })}>
+            <TouchableOpacity onPress={() => navigation.navigate('detalhesdasmotos', { moto: item })}>
               <View style={styles.card}>
                 {item.imagem && (
                   <Image source={{ uri: item.imagem }} style={styles.imagem} />
@@ -43,8 +58,7 @@ export function MotoListScreen() {
                 <View style={styles.info}>
                   <Text style={styles.placa}>{item.placa}</Text>
                   <Text style={styles.status}>
-                    Status:{' '}
-                    <Text style={styles.statusValue}>
+                    Status: <Text style={[styles.statusValue, getStatusColor(item.status)]}>
                       {item.status.toUpperCase()}
                     </Text>
                   </Text>

@@ -41,7 +41,7 @@ export default function App() {
         component={MotoDetailScreen} 
         options={{ 
         drawerItemStyle: { display: 'none' },
-        drawerLabel: "Detalhes de Motos"
+        drawerLabel: "Detalhes das Motos"
         }} 
         />
       </Drawer.Navigator>
