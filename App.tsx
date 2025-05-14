@@ -8,7 +8,6 @@ import { HomeScreen } from './src/screens/HomeScreen';
 import { MotoDetailScreen } from './src/screens/MotoDetailScreen';
 import { MotoFormScreen } from './src/screens/MotoFormScreen';
 import { MotoListScreen } from './src/screens/MotoListScreen';
-import { StatusScreen } from './src/screens/StatusScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -31,19 +30,12 @@ export default function App() {
         }} />
 
         <Drawer.Screen 
-        name="statusdasmotos" 
-        component={StatusScreen} 
-        options={{
-        drawerLabel: "Status das Motos"
-        }} />
-
-        <Drawer.Screen 
         name="cadastrarmotos" 
         component={MotoFormScreen} 
         options={{
         drawerLabel: "Cadastrar Motos"
         }} />
-        
+
         <Drawer.Screen 
         name="detalhesdasmotos" 
         component={MotoDetailScreen} 
