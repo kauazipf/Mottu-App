@@ -10,8 +10,6 @@ interface Props {
 }
 
 export function StatusPieChart({ motos }: Props) {
-  const total = motos.length || 1;
-
   const data = [
     {
       name: 'Alugada',
