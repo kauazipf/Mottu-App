@@ -5,4 +5,5 @@ export interface Moto {
   placa: string;
   status: MotoStatus;
   motivo?: string;
+  imagem?: string | null; 
 }
