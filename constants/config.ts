@@ -1,0 +1,1 @@
+export const PREJUIZO_POR_MOTO_DIA = 50;
