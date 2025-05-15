@@ -4,6 +4,16 @@ Aplicativo mobile desenvolvido com React Native e TypeScript para facilitar o co
 
 ---
 
+## 👨‍💻 Integrantes
+
+ - RM557984 - Caetano Penafiel
+   
+ - RM558957 - Kauã Fermino Zipf
+
+ - RM556653 - Victor Egídio Lira
+
+---
+
 ## 📱 Funcionalidades
 
 - ✅ Cadastro de motos com imagem, status e motivo
@@ -42,7 +52,7 @@ Aplicativo mobile desenvolvido com React Native e TypeScript para facilitar o co
 
 ```bash
 # Clone o projeto
-git clone https://github.com/seu-usuario/mottu-patio-app.git
+git clone https://github.com/seu-usuario/mottu-app.git
 
 # Acesse a pasta do projeto
 cd mottu-patio-app
