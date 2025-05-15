@@ -5,38 +5,49 @@ import {
   FlatList,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import { Moto } from '../types/Moto';
 import { buscarMotos } from '../services/storageService';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { RootDrawerParamList } from '../types/NavigationTypes';
+import { useRoute, RouteProp } from '@react-navigation/native';
+
+type NavigationProp = DrawerNavigationProp<RootDrawerParamList, 'listademotos'>;
+type RouteParams = RouteProp<RootDrawerParamList, 'listademotos'>;
 
 export function MotoListScreen() {
   const [motos, setMotos] = useState<Moto[]>([]);
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp>();
+  const route = useRoute<RouteParams>();
+  const filtroStatus = route.params?.status;
+
 
   useFocusEffect(
     useCallback(() => {
-      const carregar = async () => {
-        const data = await buscarMotos();
-        setMotos(data);
-      };
-      carregar();
-    }, [])
+        const carregar = async () => {
+          const data = await buscarMotos();
+          const filtradas = filtroStatus ? data.filter(m => m.status === filtroStatus) : data;
+          setMotos(filtradas);
+        };
+        carregar();
+      }, [filtroStatus])
   );
+
 
   function getStatusColor(status: string) {
     switch (status) {
       case 'quebrada':
-        return { color: '#FF5252' }; // vermelho
+        return { color: '#FF5252' };
       case 'parada':
-        return { color: '#FFA726' }; // laranja
+        return { color: '#FFA726' };
       case 'disponível':
-        return { color: '#2196F3' }; // azul
+        return { color: '#2196F3' };
       case 'alugada':
-        return { color: '#028220FF' }; // verde Mottu
+        return { color: '#028220FF' };
       default:
-        return { color: '#333' }; // fallback
+        return { color: '#333' };
     }
   }
 
@@ -50,7 +61,9 @@ export function MotoListScreen() {
           data={motos}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('detalhesdasmotos', { moto: item })}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('detalhesdasmotos', { moto: item })}
+            >
               <View style={styles.card}>
                 {item.imagem && (
                   <Image source={{ uri: item.imagem }} style={styles.imagem} />
@@ -58,7 +71,8 @@ export function MotoListScreen() {
                 <View style={styles.info}>
                   <Text style={styles.placa}>{item.placa}</Text>
                   <Text style={styles.status}>
-                    Status: <Text style={[styles.statusValue, getStatusColor(item.status)]}>
+                    Status:{' '}
+                    <Text style={[styles.statusValue, getStatusColor(item.status)]}>
                       {item.status.toUpperCase()}
                     </Text>
                   </Text>
@@ -125,7 +139,6 @@ const styles = StyleSheet.create({
   statusValue: {
     fontWeight: 'bold',
     textTransform: 'uppercase',
-    color: '#028220FF',
   },
   motivo: {
     fontSize: 14,

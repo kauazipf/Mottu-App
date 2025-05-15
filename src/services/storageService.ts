@@ -1,27 +1,31 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Moto } from '../types/Moto';
 
-const STORAGE_KEY = '@mottu_motos';
+const STORAGE_KEY = '@mottu:motos';
 
 export async function buscarMotos(): Promise<Moto[]> {
-  const data = await AsyncStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
+  const json = await AsyncStorage.getItem(STORAGE_KEY);
+  return json ? JSON.parse(json) : [];
 }
 
-export async function salvarMoto(novaMoto: Moto) {
+export async function salvarMoto(novaMoto: Moto): Promise<void> {
   const atual = await buscarMotos();
   const atualizado = [...atual, novaMoto];
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(atualizado));
 }
 
-export async function atualizarMoto(motoEditada: Moto) {
-  const atual = await buscarMotos();
-  const atualizado = atual.map(m => (m.id === motoEditada.id ? motoEditada : m));
+export async function atualizarMoto(motoAtualizada: Moto): Promise<void> {
+  const motos = await buscarMotos();
+  const atualizado = motos.map(m => m.id === motoAtualizada.id ? motoAtualizada : m);
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(atualizado));
 }
 
-export async function excluirMoto(id: string) {
-  const atual = await buscarMotos();
-  const atualizado = atual.filter(m => m.id !== id);
+export async function excluirMoto(id: string): Promise<void> {
+  const motos = await buscarMotos();
+  const atualizado = motos.filter(m => m.id !== id);
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(atualizado));
+}
+
+export async function limparTudo(): Promise<void> {
+  await AsyncStorage.removeItem(STORAGE_KEY);
 }
