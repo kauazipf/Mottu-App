@@ -22,16 +22,28 @@ import {
 } from '../services/storageService';
 import { RootDrawerParamList } from '../types/NavigationTypes';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useTheme } from '../contexts/ThemeContext';
 
 type RouteParams = RouteProp<RootDrawerParamList, 'detalhesdasmotos'>;
 type NavigationProp = DrawerNavigationProp<RootDrawerParamList>;
+
+function validarPlaca(placa: string): boolean {
+  const regex = /^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$/;
+  return regex.test(placa.toUpperCase());
+}
 
 export function MotoDetailScreen() {
   const route = useRoute<RouteParams>();
   const navigation = useNavigation<NavigationProp>();
   const [moto, setMoto] = useState<Moto>(route.params.moto);
+  const { colors } = useTheme();
 
   const handleEditar = async () => {
+    if (!validarPlaca(moto.placa)) {
+      Alert.alert('Erro', 'A placa deve estar no formato ABC1D23.');
+      return;
+    }
+
     await atualizarMoto(moto);
     Alert.alert('Sucesso', 'Moto atualizada!');
   };
@@ -71,8 +83,8 @@ export function MotoDetailScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Editar Moto 🛠️</Text>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.primary }]}>Editar Moto 🛠️</Text>
 
       {moto.imagem && (
         <Image source={{ uri: moto.imagem }} style={styles.imagem} />
@@ -80,20 +92,22 @@ export function MotoDetailScreen() {
 
       <Button title="Alterar Imagem" onPress={handleImagem} />
 
-      <Text style={styles.label}>Placa:</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Placa:</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
         value={moto.placa}
         onChangeText={(text) => setMoto({ ...moto, placa: text })}
+        placeholderTextColor={colors.text}
       />
 
-      <Text style={styles.label}>Status:</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Status:</Text>
       <Picker
         selectedValue={moto.status}
         onValueChange={(value) =>
           setMoto({ ...moto, status: value as MotoStatus })
         }
-        style={styles.picker}
+        style={[styles.picker, { backgroundColor: colors.card, color: colors.text }]}
+        dropdownIconColor={colors.text}
       >
         <Picker.Item label="Disponível" value="disponível" />
         <Picker.Item label="Alugada" value="alugada" />
@@ -101,24 +115,25 @@ export function MotoDetailScreen() {
         <Picker.Item label="Quebrada" value="quebrada" />
       </Picker>
 
-      <Text style={styles.label}>Motivo:</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Motivo:</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
         value={moto.motivo || ''}
         onChangeText={(text) => setMoto({ ...moto, motivo: text })}
+        placeholderTextColor={colors.text}
       />
 
       <View style={styles.buttons}>
         <Button
           title="Salvar Alterações"
           onPress={handleEditar}
-          color="#028220FF"
+          color={colors.primary}
         />
         <View style={{ marginTop: 10 }} />
         <Button
           title="Salvar e voltar à Home"
           onPress={handleEditarEVoltar}
-          color="#028220FF"
+          color={colors.primary}
         />
         <View style={{ marginTop: 10 }} />
         <Button title="Duplicar Moto" onPress={handleDuplicar} color="#2196F3" />
@@ -130,18 +145,16 @@ export function MotoDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F2F6FC', padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#028220FF', marginBottom: 16 },
+  container: { flex: 1, padding: 20 },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 16 },
   imagem: { width: '100%', height: 220, borderRadius: 10, marginBottom: 10 },
-  label: { fontSize: 14, color: '#666', marginTop: 10 },
+  label: { fontSize: 14, marginTop: 10 },
   input: {
-    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 6,
     marginTop: 4,
   },
   picker: {
-    backgroundColor: '#fff',
     borderRadius: 6,
     marginTop: 4,
     marginBottom: 10,

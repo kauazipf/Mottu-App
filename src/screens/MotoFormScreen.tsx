@@ -13,6 +13,7 @@ import uuid from 'react-native-uuid';
 import { salvarMoto } from '../services/storageService';
 import { MotoStatus } from '../types/Moto';
 import { Picker } from '@react-native-picker/picker';
+import { useTheme } from '../contexts/ThemeContext';
 
 function validarPlaca(placa: string): boolean {
   const regex = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
@@ -24,6 +25,7 @@ export function MotoFormScreen() {
   const [status, setStatus] = useState<MotoStatus>('disponível');
   const [motivo, setMotivo] = useState('');
   const [imagem, setImagem] = useState<string | undefined>(undefined);
+  const { colors } = useTheme();
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -58,34 +60,42 @@ export function MotoFormScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Cadastrar Moto 🛠️</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.primary }]}>Cadastrar Moto 🛠️</Text>
+
       <TextInput
         placeholder="Placa da moto (ABC1D23)"
         value={placa}
         onChangeText={setPlaca}
-        style={styles.input}
+        style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
+        placeholderTextColor={colors.text}
         autoCapitalize="characters"
         maxLength={7}
       />
-      <Text style={styles.label}>Status:</Text>
+
+      <Text style={[styles.label, { color: colors.text }]}>Status:</Text>
       <Picker
         selectedValue={status}
         onValueChange={(v) => setStatus(v as MotoStatus)}
-        style={styles.picker}
+        style={[styles.picker, { backgroundColor: colors.card, color: colors.text }]}
+        dropdownIconColor={colors.text}
       >
         <Picker.Item label="Disponível" value="disponível" />
         <Picker.Item label="Alugada" value="alugada" />
         <Picker.Item label="Parada" value="parada" />
         <Picker.Item label="Quebrada" value="quebrada" />
       </Picker>
+
       <TextInput
         placeholder="Motivo (se necessário)"
         value={motivo}
         onChangeText={setMotivo}
-        style={styles.input}
+        style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
+        placeholderTextColor={colors.text}
       />
+
       {imagem && <Image source={{ uri: imagem }} style={styles.image} />}
+
       <Button title="Selecionar Imagem" onPress={pickImage} />
       <View style={{ marginTop: 16 }}>
         <Button title="Salvar Moto" onPress={handleSalvar} />
@@ -95,16 +105,18 @@ export function MotoFormScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, flex: 1, backgroundColor: '#F2F6FC' },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#028220FF', marginBottom: 20 },
+  container: { padding: 20, flex: 1 },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
   input: {
-    backgroundColor: '#fff',
     padding: 12,
     marginBottom: 10,
     borderRadius: 8,
   },
   picker: {
-    backgroundColor: '#fff',
     borderRadius: 6,
     marginBottom: 10,
   },
@@ -114,5 +126,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: 10,
   },
-  label: { fontSize: 14, color: '#444', marginBottom: 4 },
+  label: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
 });

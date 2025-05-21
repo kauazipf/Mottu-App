@@ -25,7 +25,9 @@ export const StatusBarChart: React.FC<Props> = ({ motos }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>📊 Gráfico de Barras por Status</Text>
+      <Text style={styles.titulo}>
+        📊 Gráfico de Barras por Status
+      </Text>
       <View style={styles.grafico}>
         {contagem.map(({ status, total }) => {
           const altura = (total / max) * 150;

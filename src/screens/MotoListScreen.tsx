@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import { Moto } from '../types/Moto';
 import { buscarMotos } from '../services/storageService';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../types/NavigationTypes';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { useTheme } from '../contexts/ThemeContext';
 
 type NavigationProp = DrawerNavigationProp<RootDrawerParamList, 'listademotos'>;
 type RouteParams = RouteProp<RootDrawerParamList, 'listademotos'>;
@@ -22,19 +23,18 @@ export function MotoListScreen() {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteParams>();
   const filtroStatus = route.params?.status;
-
+  const { colors } = useTheme();
 
   useFocusEffect(
     useCallback(() => {
-        const carregar = async () => {
-          const data = await buscarMotos();
-          const filtradas = filtroStatus ? data.filter(m => m.status === filtroStatus) : data;
-          setMotos(filtradas);
-        };
-        carregar();
-      }, [filtroStatus])
+      const carregar = async () => {
+        const data = await buscarMotos();
+        const filtradas = filtroStatus ? data.filter(m => m.status === filtroStatus) : data;
+        setMotos(filtradas);
+      };
+      carregar();
+    }, [filtroStatus])
   );
-
 
   function getStatusColor(status: string) {
     switch (status) {
@@ -47,15 +47,18 @@ export function MotoListScreen() {
       case 'alugada':
         return { color: '#028220FF' };
       default:
-        return { color: '#333' };
+        return { color: colors.text };
     }
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>🏍️ Lista de Motos</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.primary }]}>🏍️ Lista de Motos</Text>
+
       {motos.length === 0 ? (
-        <Text style={styles.emptyText}>Nenhuma moto cadastrada.</Text>
+        <Text style={[styles.emptyText, { color: colors.text }]}>
+          Nenhuma moto cadastrada.
+        </Text>
       ) : (
         <FlatList
           data={motos}
@@ -64,13 +67,13 @@ export function MotoListScreen() {
             <TouchableOpacity
               onPress={() => navigation.navigate('detalhesdasmotos', { moto: item })}
             >
-              <View style={styles.card}>
+              <View style={[styles.card, { backgroundColor: colors.card }]}>
                 {item.imagem && (
                   <Image source={{ uri: item.imagem }} style={styles.imagem} />
                 )}
                 <View style={styles.info}>
-                  <Text style={styles.placa}>{item.placa}</Text>
-                  <Text style={styles.status}>
+                  <Text style={[styles.placa, { color: colors.text }]}>{item.placa}</Text>
+                  <Text style={[styles.status, { color: colors.text }]}>
                     Status:{' '}
                     <Text style={[styles.statusValue, getStatusColor(item.status)]}>
                       {item.status.toUpperCase()}
@@ -92,23 +95,19 @@ export function MotoListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F6FC',
     padding: 20,
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#028220FF',
     marginBottom: 16,
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
     textAlign: 'center',
     marginTop: 40,
   },
   card: {
-    backgroundColor: '#fff',
     flexDirection: 'row',
     padding: 12,
     marginBottom: 12,
@@ -129,12 +128,10 @@ const styles = StyleSheet.create({
   placa: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#1F1F1F',
     marginBottom: 4,
   },
   status: {
     fontSize: 14,
-    color: '#444',
   },
   statusValue: {
     fontWeight: 'bold',
