@@ -97,7 +97,7 @@ export function MotoFormScreen() {
       {imagem && <Image source={{ uri: imagem }} style={styles.image} />}
 
       <Button title="Selecionar Imagem" onPress={pickImage} />
-      <View style={{ marginTop: 16 }}>
+      <View style={{ marginTop: 20 }}>
         <Button title="Salvar Moto" onPress={handleSalvar} />
       </View>
     </View>

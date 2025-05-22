@@ -1,6 +1,6 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -15,6 +15,9 @@ import { buscarMotos } from '../services/storageService';
 import { Moto } from '../types/Moto';
 import { RootDrawerParamList } from '../types/NavigationTypes';
 
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 type NavigationProp = DrawerNavigationProp<RootDrawerParamList>;
 
 export function HomeScreen() {
@@ -22,13 +25,15 @@ export function HomeScreen() {
   const [motos, setMotos] = useState<Moto[]>([]);
   const navigation = useNavigation<NavigationProp>();
 
-  useEffect(() => {
-    const carregar = async () => {
-      const data = await buscarMotos();
-      setMotos(data);
-    };
-    carregar();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const carregar = async () => {
+        const data = await buscarMotos();
+        setMotos(data);
+      };
+      carregar();
+    }, [])
+  );
 
   const contagemPorStatus = {
     alugada: motos.filter((m) => m.status === 'alugada').length,

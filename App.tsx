@@ -21,25 +21,26 @@ export default function App() {
           <Drawer.Screen
             name="inicio"
             component={HomeScreen}
-            options={{ drawerLabel: 'Início' }}
+            options={{ drawerLabel: 'Início', title: 'Início'
+             }}
           />
 
           <Drawer.Screen
             name="listademotos"
             component={MotoListScreen}
-            options={{ drawerLabel: 'Lista de Motos' }}
+            options={{ drawerLabel: 'Lista de Motos', title: 'Lista de Motos' }}
           />
 
           <Drawer.Screen
             name="cadastrarmotos"
             component={MotoFormScreen}
-            options={{ drawerLabel: 'Cadastrar Motos' }}
+            options={{ drawerLabel: 'Cadastrar Motos', title: 'Cadastro de Motos' }}
           />
 
           <Drawer.Screen
             name="detalhesdasmotos"
             component={MotoDetailScreen}
-            options={{ drawerItemStyle: { display: 'none' } }}
+            options={{ drawerItemStyle: { display: 'none' }, title: 'Detalhes das Motos' }}
           />
 
         </Drawer.Navigator>
