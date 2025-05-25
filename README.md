@@ -59,8 +59,8 @@ Aplicativo mobile desenvolvido em **React Native + Expo** para controle de motos
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/seuusuario/mottu-patio.git
-cd mottu-patio
+git clone https://github.com/kauazipf/mottu-app.git
+cd mottu-app
 ```
 
 2. Instale as dependências:
@@ -92,7 +92,7 @@ npx expo start
 
 Você pode visualizar os mockups das telas geradas por IA no Figma:
 
-👉 [Acessar protótipo no Figma]([https://www.figma.com/file/SEU-LINK-AQUI/Mottu-P%C3%A1tio-Inteligente-Mockup](https://www.figma.com/design/jcaofnnroEDitnYHUZA0T1/Protótipo-da-MonitoringMottu?node-id=0-1&p=f&m=draw))
+👉 [Acessar protótipo no Figma]([[https://www.figma.com/file/SEU-LINK-AQUI/Mottu-P%C3%A1tio-Inteligente-Mockup](https://www.figma.com/design/jcaofnnroEDitnYHUZA0T1/Protótipo-da-MonitoringMottu?node-id=0-1&p=f&m=draw)](https://www.figma.com/design/jcaofnnroEDitnYHUZA0T1/Protótipo-da-MonitoringMottu?node-id=0-1&p=f&m=draw))
 
 ---
 
