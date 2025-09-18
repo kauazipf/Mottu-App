@@ -1,4 +1,5 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
@@ -51,8 +52,18 @@ export function HomeScreen() {
     { label: 'Disponível', key: 'disponível', color: '#2196F3' },
   ];
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+    <ScrollView
+      contentContainerStyle={[
+        styles.container,
+        {
+          paddingBottom: insets.bottom + 16,
+          backgroundColor: colors.background,
+        },
+      ]}
+    >
       <Text style={[styles.title, { color: colors.primary }]}>📊 Painel do Pátio</Text>
       <Text style={[styles.subtitle, { color: colors.text }]}>
         Resumo visual da frota de motos cadastradas.
