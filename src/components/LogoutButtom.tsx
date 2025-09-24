@@ -4,27 +4,28 @@ import { Alert, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+// Tipo para navegação no Stack
+type StackNavigation = NativeStackNavigationProp<any>;
 
 export function LogoutButton() {
   const { logout } = useAuth();
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigation>(); // 👈 Aqui!
 
   const handleLogout = () => {
     Alert.alert(
       'Sair',
       'Tem certeza que deseja sair da sua conta?',
       [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
+        { text: 'Cancelar', style: 'cancel' },
         {
           text: 'Sair',
           style: 'destructive',
           onPress: async () => {
             await logout();
-            navigation.navigate('Login' as never);
+            navigation.navigate('Login'); // ✅ Agora funciona!
           },
         },
       ],
