@@ -20,6 +20,7 @@ import {MotoListScreen} from './src/screens/MotoListScreen';
 import {MotoFormScreen }from './src/screens/MotoFormScreen';
 import {MotoDetailScreen} from './src/screens/MotoDetailScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import EditProfileScreen from './src/screens/EditProfileScreen';
 
 // Componente de Logout (opcional, mas recomendado no menu)
 import { LogoutButton } from './src/components/LogoutButtom';
@@ -111,6 +112,11 @@ function RootNavigator() {
         name="detalhesdasmotos"
         component={MotoDetailScreen}
         options={{ drawerItemStyle: { display: 'none' }, title: 'Detalhes da Moto' }}
+      />
+      <Drawer.Screen
+        name="editarperfil"
+        component={EditProfileScreen}
+        options={{ drawerItemStyle: { display: 'none' }, title: 'Editar Perfil' }}
       />
     </Drawer.Navigator>
   );

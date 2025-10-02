@@ -1,9 +1,9 @@
-export type MotoStatus = 'alugada' | 'parada' | 'disponível' | 'quebrada';
+export type MotoStatus = 'alugada' | 'parada' | 'quebrada' | 'disponível';
 
 export interface Moto {
   id: string;
   placa: string;
   status: MotoStatus;
-  motivo?: string;
-  imagem?: string | null; 
+  motivo: string;
+  imagem?: string; 
 }
