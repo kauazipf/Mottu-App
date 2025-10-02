@@ -7,15 +7,9 @@ import {
   Text,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigation } from '@react-navigation/native';
-
-type NavigationProp = {
-  navigate: (screen: string) => void;
-};
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
-  const navigation = useNavigation<NavigationProp>();
 
   // Mostra loading enquanto verifica autenticação
   if (isLoading) {
@@ -27,13 +21,11 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  // Se não estiver logado, redireciona para Login
+  // Se não estiver logado, **não renderiza nada** — o RootNavigator cuida da navegação
   if (!user) {
-    navigation.navigate('Login');
     return null;
   }
 
-  // Se estiver logado, renderiza o conteúdo
   return <>{children}</>;
 };
 

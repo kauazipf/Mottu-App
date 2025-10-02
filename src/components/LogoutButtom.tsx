@@ -25,7 +25,10 @@ export function LogoutButton() {
           style: 'destructive',
           onPress: async () => {
             await logout();
-            navigation.navigate('Login'); // ✅ Agora funciona!
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
           },
         },
       ],
