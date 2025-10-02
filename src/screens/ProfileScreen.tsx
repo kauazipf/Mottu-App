@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // ✅ Importado
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const { colors } = useTheme();
+  const navigation = useNavigation(); // ✅ Hook adicionado
   const insets = useSafeAreaInsets();
 
   const handleLogout = () => {
@@ -27,7 +29,7 @@ export default function ProfileScreen() {
           style: 'destructive',
           onPress: async () => {
             await logout();
-            // Navegação será feita via ProtectedRoute ou App.tsx
+            // Opcional: navegar para Login, mas o ProtectedRoute já cuida disso
           },
         },
       ],
@@ -52,7 +54,7 @@ export default function ProfileScreen() {
         <View style={[styles.card, { backgroundColor: colors.card }]}>
           <Text style={[styles.label, { color: colors.text }]}>Nome:</Text>
           <Text style={[styles.value, { color: colors.text }]}>
-            {user?.email.split('@')[0] || 'Usuário'} {/* Exibe parte do e-mail como nome */}
+            {user?.email.split('@')[0] || 'Usuário'}
           </Text>
         </View>
 
@@ -69,6 +71,14 @@ export default function ProfileScreen() {
             Ativo
           </Text>
         </View>
+
+        {/* ✅ Botão de editar perfil — agora com navigation válido */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('editarperfil' as never)}
+          style={[styles.editButton, { backgroundColor: colors.primary }]}
+        >
+          <Text style={styles.editButtonText}>✏️ Editar Perfil</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={handleLogout}
@@ -123,6 +133,17 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   logoutButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  editButton: {
+    marginTop: 24,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  editButtonText: {
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },

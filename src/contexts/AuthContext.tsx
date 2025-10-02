@@ -8,11 +8,13 @@ import React, {
 } from 'react';
 import * as SecureStore from 'expo-secure-store';
 
+// 1. ✅ Atualize a tipagem para incluir updateUser
 type AuthContextType = {
   user: { email: string } | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateUser: (newData: { email: string }) => Promise<void>; // 👈 Adicionado
   isLoading: boolean;
 };
 
@@ -32,7 +34,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Simulação: substitua por chamada real à API
     if (email && password) {
       const userData = { email };
       setUser(userData);
@@ -43,7 +44,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const register = async (name: string, email: string, password: string) => {
-    // Simulação
     if (name && email && password) {
       const userData = { email };
       setUser(userData);
@@ -58,8 +58,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await SecureStore.deleteItemAsync('user');
   };
 
+  // 2. ✅ Função updateUser (já estava aqui — mantenha)
+  const updateUser = async (newData: { email: string }) => {
+    if (!user) throw new Error('Nenhum usuário logado');
+    const updatedUser = { ...user, ...newData };
+    setUser(updatedUser);
+    await SecureStore.setItemAsync('user', JSON.stringify(updatedUser));
+  };
+
+  // 3. ✅ Inclua updateUser no value do Provider
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        updateUser, // 👈 Adicionado aqui
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
