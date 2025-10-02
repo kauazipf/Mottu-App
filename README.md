@@ -6,6 +6,7 @@ Aplicativo mobile desenvolvido em **React Native + Expo** para controle de motos
 
 ## 🚀 Funcionalidades
 
+### 🏍️ Gestão de Motos
 - ✅ Cadastro de motos com:
   - Placa no formato `ABC1D23` com validação automática
   - Status: `alugada`, `parada`, `quebrada`, `disponível`
@@ -18,26 +19,58 @@ Aplicativo mobile desenvolvido em **React Native + Expo** para controle de motos
   - Placa
   - Status com **cores indicativas**
   - Filtro automático ao retornar da Home
+
+### 📊 Dashboard Inteligente (HomeScreen)
 - ✅ Gráficos atualizados automaticamente:
   - Gráfico de **pizza** por status
   - Gráfico de **barras** com cores personalizadas
-- ✅ Cards interativos com contagem de motos por status e prejuízo estimado
-- ✅ Botão para **alternar entre modo claro e escuro**
+- ✅ Cards interativos com contagem de motos por status e **prejuízo estimado** (R$ 50/dia por moto parada/quebrada)
+
+### 🔐 Sistema de Autenticação
+- ✅ Tela de **Login** com validação de e-mail e senha
+- ✅ Tela de **Cadastro** com nome, e-mail e senha (mín. 6 caracteres)
+- ✅ Tela de **Perfil** com informações do usuário e botão de logout
+- ✅ Tela de **Edição de Perfil** para atualizar dados
+- ✅ **Logout funcional** com confirmação e redirecionamento seguro
+- ✅ **Proteção de rotas**: telas de gestão só acessíveis após login
+
+### 🌐 Integração com API
+- ✅ **Sincronização em tempo real** com API .NET para todas as operações (CRUD)
+- ✅ **Fallback automático para armazenamento local** caso a API esteja indisponível
+- ✅ Feedback visual ao usuário quando a API falha (usa dados locais)
+
+### 🎨 Experiência do Usuário
+- ✅ Botão para **alternar entre modo claro e escuro** (em todas as telas)
 - ✅ Atualização dos dados sempre que a tela recebe foco (sem precisar reiniciar o app)
 - ✅ Navegação via menu hambúrguer com **reset automático de filtro**
-- ✅ Armazenamento local persistente com **AsyncStorage**
-- ✅ Interface moderna e responsiva com tema dinâmico
+- ✅ Interface moderna, responsiva e com **safe area insets** (não gruda na barra de navegação)
+- ✅ Indicadores de carregamento e mensagens de erro amigáveis
+
+### 💾 Persistência e Arquitetura
+- ✅ **API .NET como fonte principal de dados**
+- ✅ **AsyncStorage como fallback** para modo offline
+- ✅ Estrutura de código limpa com **TypeScript**, **Context API** e separação de responsabilidades
+- ✅ Código organizado em pastas lógicas: `screens`, `components`, `services`, `contexts`, `types`
+
+---
+
+## 🧩 Link da API
+👉 https://github.com/Caepena/Sprint3_MonitoringMottu_.NET
 
 ---
 
 ## 🧩 Telas disponíveis
 
-| Tela               | Descrição |
-|--------------------|-----------|
-| **HomeScreen**     | Gráficos, cards de status, prejuízo estimado e troca de tema |
-| **MotoFormScreen** | Cadastro de nova moto com formulário validado |
-| **MotoListScreen** | Lista completa ou filtrada de motos com acesso aos detalhes |
-| **MotoDetailScreen** | Edição, exclusão e duplicação de uma moto |
+| Tela                   | Descrição |
+|------------------------|-----------|
+| **LoginScreen**        | Autenticação de usuário com e-mail e senha |
+| **RegisterScreen**     | Cadastro de nova conta |
+| **HomeScreen**         | Gráficos, cards de status, prejuízo estimado e troca de tema |
+| **MotoFormScreen**     | Cadastro de nova moto com formulário validado |
+| **MotoListScreen**     | Lista completa ou filtrada de motos com acesso aos detalhes |
+| **MotoDetailScreen**   | Edição, exclusão e duplicação de uma moto |
+| **ProfileScreen**      | Visualização das informações do usuário e logout |
+| **EditProfileScreen**  | Edição das informações do perfil |
 
 ---
 
@@ -45,12 +78,14 @@ Aplicativo mobile desenvolvido em **React Native + Expo** para controle de motos
 
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
-- [React Navigation (Drawer)](https://reactnavigation.org/)
-- [AsyncStorage](https://docs.expo.dev/versions/latest/sdk/async-storage/)
+- [React Navigation (Drawer + Stack)](https://reactnavigation.org/)
+- [AsyncStorage](https://docs.expo.dev/versions/latest/sdk/async-storage/) (fallback offline)
+- [axios](https://axios-http.com/) (comunicação com API)
 - [react-native-chart-kit](https://github.com/indiespirit/react-native-chart-kit)
 - [expo-image-picker](https://docs.expo.dev/versions/latest/sdk/imagepicker/)
 - [uuid](https://www.npmjs.com/package/react-native-uuid)
 - [TypeScript](https://www.typescriptlang.org/)
+- [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/secure-store/) (para dados de autenticação)
 
 ---
 
@@ -69,7 +104,13 @@ cd mottu-app
 npm install
 ```
 
-3. Rode o projeto:
+3. Configure o IP da API (substitua pelo IP da sua máquina):
+
+```// src/services/apiService.ts
+const API_BASE_URL = 'http://SEU_IP_LOCAL:5000/api';
+```
+
+4. Rode o projeto:
 
 ```bash
 npx expo start
@@ -81,7 +122,9 @@ npx expo start
 
 ## 🧠 Observações Técnicas
 
-- Os dados são persistidos com **AsyncStorage**, então ao reiniciar o app as motos cadastradas continuam salvas.
+- O app se conecta à API .NET em http://SEU_IP_LOCAL:5000/api para sincronizar dados de motos.
+- Se a API estiver indisponível, os dados são salvos e carregados localmente com AsyncStorage, garantindo funcionalidade offline.
+- Os dados de autenticação são armazenados com SecureStore para maior segurança.
 - A `MotoListScreen` detecta automaticamente se veio de um clique no card da Home ou do menu, ajustando os filtros.
 - A tela de gráficos agora se atualiza automaticamente toda vez que é acessada.
 - O botão de **alternar tema** muda o visual de todas as telas, inclusive texto, cartões e gráficos.
