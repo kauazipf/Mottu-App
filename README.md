@@ -55,7 +55,7 @@ Aplicativo mobile desenvolvido em **React Native + Expo** para controle de motos
 ---
 
 ## 🧩 Link da API
-👉 [Acessar link da API]([[https://github.com/Caepena/Sprint3_MonitoringMottu_.NET))
+👉 [Acessar link da API]([[https://github.com/Caepena/Sprint3_MonitoringMottu_.NET]])
 
 ---
 
