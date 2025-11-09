@@ -1,4 +1,3 @@
-// src/screens/RegisterScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -14,8 +13,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next'; // 👈 Importa o hook de tradução
 
 export default function RegisterScreen() {
+  const { t } = useTranslation(); // 👈 Hook para usar traduções
   const { colors } = useTheme();
   const { register, isLoading: authLoading } = useAuth();
   const navigation = useNavigation();
@@ -28,17 +29,17 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!name || !email || !password) {
-      Alert.alert('⚠️ Atenção', 'Preencha todos os campos.');
+      Alert.alert(t('register.alertTitle'), t('register.fillAll'));
       return;
     }
 
     if (!email.includes('@')) {
-      Alert.alert('❌ Erro', 'E-mail inválido.');
+      Alert.alert(t('register.errorTitle'), t('register.invalidEmail'));
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('❌ Erro', 'A senha deve ter pelo menos 6 caracteres.');
+      Alert.alert(t('register.errorTitle'), t('register.shortPassword'));
       return;
     }
 
@@ -46,7 +47,7 @@ export default function RegisterScreen() {
     try {
       await register(name, email, password);
     } catch (error) {
-      Alert.alert('❌ Erro', 'Não foi possível criar a conta. Tente novamente.');
+      Alert.alert(t('register.errorTitle'), t('register.registerFail'));
     } finally {
       setIsLoading(false);
     }
@@ -62,14 +63,16 @@ export default function RegisterScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.formContainer}>
-          <Text style={[styles.title, { color: colors.primary }]}>🆕 Cadastro</Text>
+          <Text style={[styles.title, { color: colors.primary }]}>
+            🆕 {t('register.title')}
+          </Text>
           <Text style={[styles.subtitle, { color: colors.text }]}>
-            Crie sua conta para acessar o sistema
+            {t('register.subtitle')}
           </Text>
 
           <TextInput
             style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
-            placeholder="Nome Completo"
+            placeholder={t('register.namePlaceholder')}
             placeholderTextColor={colors.text}
             value={name}
             onChangeText={setName}
@@ -78,7 +81,7 @@ export default function RegisterScreen() {
 
           <TextInput
             style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
-            placeholder="E-mail"
+            placeholder={t('register.emailPlaceholder')}
             placeholderTextColor={colors.text}
             value={email}
             onChangeText={setEmail}
@@ -89,7 +92,7 @@ export default function RegisterScreen() {
 
           <TextInput
             style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
-            placeholder="Senha (mín. 6 caracteres)"
+            placeholder={t('register.passwordPlaceholder')}
             placeholderTextColor={colors.text}
             value={password}
             onChangeText={setPassword}
@@ -111,7 +114,7 @@ export default function RegisterScreen() {
             {isLoading || authLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>Cadastrar</Text>
+              <Text style={styles.buttonText}>{t('register.registerButton')}</Text>
             )}
           </TouchableOpacity>
 
@@ -120,7 +123,7 @@ export default function RegisterScreen() {
             style={styles.link}
           >
             <Text style={[styles.linkText, { color: colors.primary }]}>
-              Já tem conta? Faça login
+              {t('register.haveAccount')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -130,17 +133,15 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center', // 👈 Centraliza verticalmente
+    justifyContent: 'center',
     paddingVertical: 40,
   },
   formContainer: {
-    marginHorizontal: 32, // 👈 Centraliza horizontalmente
-    alignItems: 'center', // 👈 Centraliza conteúdo interno
+    marginHorizontal: 32,
+    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   title: {
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   input: {
-    width: '100%', // 👈 Ocupa toda a largura
+    width: '100%',
     padding: 12,
     marginBottom: 16,
     borderRadius: 8,

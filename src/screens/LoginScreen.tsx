@@ -1,4 +1,3 @@
-// src/screens/LoginScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -11,12 +10,14 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../contexts/ThemeContext'; // 👈 Já está sendo usado
+import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next'; // 👈 Importação do i18n
 
 export default function LoginScreen() {
-  const { colors, toggleTheme } = useTheme(); // 👈 Adicionamos toggleTheme
+  const { t } = useTranslation(); // 👈 Hook para usar traduções
+  const { colors, toggleTheme } = useTheme();
   const { login, isLoading: authLoading } = useAuth();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -27,12 +28,12 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('⚠️ Atenção', 'Preencha todos os campos.');
+      Alert.alert('⚠️ ' + t('login.alertTitle'), t('login.emptyFields'));
       return;
     }
 
     if (!email.includes('@')) {
-      Alert.alert('❌ Erro', 'E-mail inválido.');
+      Alert.alert('❌ ' + t('login.errorTitle'), t('login.invalidEmail'));
       return;
     }
 
@@ -40,7 +41,7 @@ export default function LoginScreen() {
     try {
       await login(email, password);
     } catch (error) {
-      Alert.alert('❌ Erro', 'Credenciais inválidas. Tente novamente.');
+      Alert.alert('❌ ' + t('login.errorTitle'), t('login.invalidCredentials'));
     } finally {
       setIsLoading(false);
     }
@@ -56,14 +57,14 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.formContainer}>
-          <Text style={[styles.title, { color: colors.primary }]}>🔐 Login</Text>
+          <Text style={[styles.title, { color: colors.primary }]}>🔐 {t('login.title')}</Text>
           <Text style={[styles.subtitle, { color: colors.text }]}>
-            Acesse sua conta para gerenciar o pátio
+            {t('login.subtitle')}
           </Text>
 
           <TextInput
             style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
-            placeholder="E-mail"
+            placeholder={t('login.emailPlaceholder')}
             placeholderTextColor={colors.text}
             value={email}
             onChangeText={setEmail}
@@ -74,7 +75,7 @@ export default function LoginScreen() {
 
           <TextInput
             style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
-            placeholder="Senha"
+            placeholder={t('login.passwordPlaceholder')}
             placeholderTextColor={colors.text}
             value={password}
             onChangeText={setPassword}
@@ -96,7 +97,7 @@ export default function LoginScreen() {
             {isLoading || authLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>Entrar</Text>
+              <Text style={styles.buttonText}>{t('login.button')}</Text>
             )}
           </TouchableOpacity>
 
@@ -105,11 +106,11 @@ export default function LoginScreen() {
             style={styles.link}
           >
             <Text style={[styles.linkText, { color: colors.primary }]}>
-              Não tem conta? Cadastre-se
+              {t('login.noAccount')}
             </Text>
           </TouchableOpacity>
 
-          {/* 🌗 BOTÃO DE ALTERNAR TEMA */}
+          {/* 🌗 Botão de alternar tema */}
           <TouchableOpacity
             onPress={toggleTheme}
             style={[
@@ -118,7 +119,7 @@ export default function LoginScreen() {
             ]}
           >
             <Text style={[styles.themeButtonText, { color: colors.text }]}>
-              🌗 Alternar Tema
+              🌗 {t('login.toggleTheme')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -183,7 +184,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  // 👇 Estilo do botão de tema
   themeButton: {
     marginTop: 64,
     padding: 12,

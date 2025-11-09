@@ -13,6 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
+import { useTranslation } from 'react-i18next'; // 👈 i18n
 
 import { Moto, MotoStatus } from '../types/Moto';
 import {
@@ -37,26 +38,27 @@ export function MotoDetailScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [moto, setMoto] = useState<Moto>(route.params.moto);
   const { colors } = useTheme();
+  const { t } = useTranslation(); // 👈 hook de tradução
 
   const handleEditar = async () => {
     if (!validarPlaca(moto.placa)) {
-      Alert.alert('Erro', 'A placa deve estar no formato ABC1D23.');
+      Alert.alert(t('motoDetail.error'), t('motoDetail.invalidPlate'));
       return;
     }
 
     await atualizarMoto(moto);
-    Alert.alert('Sucesso', 'Moto atualizada!');
+    Alert.alert(t('motoDetail.success'), t('motoDetail.updated'));
   };
 
   const handleEditarEVoltar = async () => {
     await atualizarMoto(moto);
-    Alert.alert('Sucesso', 'Moto atualizada!');
+    Alert.alert(t('motoDetail.success'), t('motoDetail.updated'));
     navigation.navigate('inicio');
   };
 
   const handleExcluir = async () => {
     await excluirMoto(moto.id);
-    Alert.alert('Excluída', 'A moto foi removida do sistema.');
+    Alert.alert(t('motoDetail.deleted'), t('motoDetail.removed'));
     navigation.goBack();
   };
 
@@ -78,21 +80,23 @@ export function MotoDetailScreen() {
       placa: moto.placa + '-copy',
     };
     await salvarMoto(novaMoto);
-    Alert.alert('Duplicada!', 'Uma cópia da moto foi criada.');
+    Alert.alert(t('motoDetail.duplicated'), t('motoDetail.copied'));
     navigation.navigate('detalhesdasmotos', { moto: novaMoto });
   };
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.primary }]}>Editar Moto 🛠️</Text>
+      <Text style={[styles.title, { color: colors.primary }]}>
+        {t('motoDetail.title')}
+      </Text>
 
       {moto.imagem && (
         <Image source={{ uri: moto.imagem }} style={styles.imagem} />
       )}
 
-      <Button title="Alterar Imagem" onPress={handleImagem} />
+      <Button title={t('motoDetail.changeImage')} onPress={handleImagem} />
 
-      <Text style={[styles.label, { color: colors.text }]}>Placa:</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t('motoDetail.plate')}</Text>
       <TextInput
         style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
         value={moto.placa}
@@ -100,7 +104,7 @@ export function MotoDetailScreen() {
         placeholderTextColor={colors.text}
       />
 
-      <Text style={[styles.label, { color: colors.text }]}>Status:</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t('motoDetail.status')}</Text>
       <Picker
         selectedValue={moto.status}
         onValueChange={(value) =>
@@ -109,13 +113,13 @@ export function MotoDetailScreen() {
         style={[styles.picker, { backgroundColor: colors.card, color: colors.text }]}
         dropdownIconColor={colors.text}
       >
-        <Picker.Item label="Disponível" value="disponível" />
-        <Picker.Item label="Alugada" value="alugada" />
-        <Picker.Item label="Parada" value="parada" />
-        <Picker.Item label="Quebrada" value="quebrada" />
+        <Picker.Item label={t('motoDetail.available')} value="disponível" />
+        <Picker.Item label={t('motoDetail.rented')} value="alugada" />
+        <Picker.Item label={t('motoDetail.stopped')} value="parada" />
+        <Picker.Item label={t('motoDetail.broken')} value="quebrada" />
       </Picker>
 
-      <Text style={[styles.label, { color: colors.text }]}>Motivo:</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t('motoDetail.reason')}</Text>
       <TextInput
         style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
         value={moto.motivo || ''}
@@ -124,21 +128,13 @@ export function MotoDetailScreen() {
       />
 
       <View style={styles.buttons}>
-        <Button
-          title="Salvar Alterações"
-          onPress={handleEditar}
-          color={colors.primary}
-        />
+        <Button title={t('motoDetail.saveChanges')} onPress={handleEditar} color={colors.primary} />
         <View style={{ marginTop: 10 }} />
-        <Button
-          title="Salvar e voltar à Home"
-          onPress={handleEditarEVoltar}
-          color={colors.primary}
-        />
+        <Button title={t('motoDetail.saveAndReturn')} onPress={handleEditarEVoltar} color={colors.primary} />
         <View style={{ marginTop: 10 }} />
-        <Button title="Duplicar Moto" onPress={handleDuplicar} color="#2196F3" />
+        <Button title={t('motoDetail.duplicate')} onPress={handleDuplicar} color="#2196F3" />
         <View style={{ marginTop: 10 }} />
-        <Button title="Excluir Moto" onPress={handleExcluir} color="#FF5252" />
+        <Button title={t('motoDetail.delete')} onPress={handleExcluir} color="#FF5252" />
       </View>
     </ScrollView>
   );

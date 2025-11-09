@@ -14,11 +14,13 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../types/NavigationTypes';
 import { RouteProp } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
+import { useTranslation } from 'react-i18next'; // 👈 Importa o i18n
 
 type NavigationProp = DrawerNavigationProp<RootDrawerParamList, 'listademotos'>;
 type RouteParams = RouteProp<RootDrawerParamList, 'listademotos'>;
 
 export function MotoListScreen() {
+  const { t } = useTranslation(); // 👈 Hook de tradução
   const [motos, setMotos] = useState<Moto[]>([]);
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteParams>();
@@ -51,13 +53,30 @@ export function MotoListScreen() {
     }
   }
 
+  function translateStatus(status: string) {
+    switch (status) {
+      case 'quebrada':
+        return t('motoList.broken');
+      case 'parada':
+        return t('motoList.stopped');
+      case 'disponível':
+        return t('motoList.available');
+      case 'alugada':
+        return t('motoList.rented');
+      default:
+        return status;
+    }
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.primary }]}>🏍️ Lista de Motos</Text>
+      <Text style={[styles.title, { color: colors.primary }]}>
+        🏍️ {t('motoList.title')}
+      </Text>
 
       {motos.length === 0 ? (
         <Text style={[styles.emptyText, { color: colors.text }]}>
-          Nenhuma moto cadastrada.
+          {t('motoList.empty')}
         </Text>
       ) : (
         <FlatList
@@ -74,13 +93,15 @@ export function MotoListScreen() {
                 <View style={styles.info}>
                   <Text style={[styles.placa, { color: colors.text }]}>{item.placa}</Text>
                   <Text style={[styles.status, { color: colors.text }]}>
-                    Status:{' '}
+                    {t('motoList.status')}{' '}
                     <Text style={[styles.statusValue, getStatusColor(item.status)]}>
-                      {item.status.toUpperCase()}
+                      {translateStatus(item.status)}
                     </Text>
                   </Text>
                   {item.motivo && (
-                    <Text style={styles.motivo}>Motivo: {item.motivo}</Text>
+                    <Text style={styles.motivo}>
+                      {t('motoList.reason')}: {item.motivo}
+                    </Text>
                   )}
                 </View>
               </View>

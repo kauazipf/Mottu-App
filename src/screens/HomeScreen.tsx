@@ -1,7 +1,7 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import React, { useState, useCallback } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -17,12 +17,13 @@ import { useTheme } from '../contexts/ThemeContext';
 import { buscarMotos } from '../services/motoService'; 
 import { Moto } from '../types/Moto';
 import { RootDrawerParamList } from '../types/NavigationTypes';
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
-import { ProtectedRoute } from './../components/ProtectedRoutes'; 
+import { ProtectedRoute } from './../components/ProtectedRoutes';
+import { useTranslation } from 'react-i18next'; // 👈 Importa i18n
+
 type NavigationProp = DrawerNavigationProp<RootDrawerParamList>;
 
 export function HomeScreen() {
+  const { t } = useTranslation(); // 👈 Hook de tradução
   const { colors, toggleTheme } = useTheme();
   const [motos, setMotos] = useState<Moto[]>([]);
   const [isLoading, setIsLoading] = useState(true); 
@@ -40,15 +41,15 @@ export function HomeScreen() {
         } catch (error) {
           console.error('Erro ao carregar motos:', error);
           Alert.alert(
-            '❌ Erro de conexão',
-            'Não foi possível carregar os dados. Verifique sua internet.'
+            t('home.errorTitle'),
+            t('home.errorMessage')
           );
         } finally {
           setIsLoading(false);
         }
       };
       carregarMotos();
-    }, [])
+    }, [t])
   );
 
   // Contagem por status
@@ -62,26 +63,25 @@ export function HomeScreen() {
   const prejuizo = (contagemPorStatus.parada + contagemPorStatus.quebrada) * 50;
 
   const statusCards = [
-    { label: 'Alugada', key: 'alugada', color: '#028220FF' },
-    { label: 'Parada', key: 'parada', color: '#FFA726' },
-    { label: 'Quebrada', key: 'quebrada', color: '#FF5252' },
-    { label: 'Disponível', key: 'disponível', color: '#2196F3' },
+    { label: t('home.rented'), key: 'alugada', color: '#028220FF' },
+    { label: t('home.stopped'), key: 'parada', color: '#FFA726' },
+    { label: t('home.broken'), key: 'quebrada', color: '#FF5252' },
+    { label: t('home.available'), key: 'disponível', color: '#2196F3' },
   ];
 
-  // Se estiver carregando, mostra loading centralizado
   if (isLoading) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
         <ActivityIndicator size="large" color={colors.primary} />
         <Text style={[styles.loadingText, { color: colors.text }]}>
-          Carregando dados do pátio...
+          {t('home.loading')}
         </Text>
       </View>
     );
   }
 
   return (
-    <ProtectedRoute> {/* ⭐ Protege a tela: só acessa se estiver logado */}
+    <ProtectedRoute>
       <ScrollView
         contentContainerStyle={[
           styles.container,
@@ -92,10 +92,10 @@ export function HomeScreen() {
         ]}
       >
         <Text style={[styles.title, { color: colors.primary }]}>
-          📊 Painel do Pátio
+          📊 {t('home.title')}
         </Text>
         <Text style={[styles.subtitle, { color: colors.text }]}>
-          Resumo visual da frota de motos cadastradas.
+          {t('home.subtitle')}
         </Text>
 
         <TouchableOpacity
@@ -103,7 +103,7 @@ export function HomeScreen() {
           style={[styles.themeToggle, { backgroundColor: colors.card }]}
         >
           <Text style={[styles.themeToggleText, { color: colors.text }]}>
-            🌗 Alternar Tema
+            🌗 {t('home.toggleTheme')}
           </Text>
         </TouchableOpacity>
 
@@ -138,11 +138,7 @@ export function HomeScreen() {
               </Text>
               {['parada', 'quebrada'].includes(key) && (
                 <Text style={styles.cardPrejuizo}>
-                  💸 R${' '}
-                  {(
-                    contagemPorStatus[key as keyof typeof contagemPorStatus] * 50
-                  ).toFixed(2)}{' '}
-                  por dia
+                  💸 {t('home.lossPerDay', { value: (contagemPorStatus[key as keyof typeof contagemPorStatus] * 50).toFixed(2) })}
                 </Text>
               )}
             </TouchableOpacity>
@@ -150,10 +146,10 @@ export function HomeScreen() {
         </View>
 
         <Text style={[styles.totalInfo, { color: colors.text }]}>
-          Total de motos: {motos.length}
+          {t('home.totalMotos', { count: motos.length })}
         </Text>
         <Text style={styles.totalPrejuizo}>
-          💸 Prejuízo diário total: R$ {prejuizo.toFixed(2)}
+          💸 {t('home.totalLoss', { value: prejuizo.toFixed(2) })}
         </Text>
       </ScrollView>
     </ProtectedRoute>

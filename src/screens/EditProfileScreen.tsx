@@ -1,4 +1,3 @@
-// src/screens/EditProfileScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -13,14 +12,15 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next'; // 👈 importação do i18n
 
 export default function EditProfileScreen() {
+  const { t } = useTranslation(); // 👈 hook para usar traduções
   const { user, updateUser } = useAuth();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
-  // Extrai nome do e-mail (ex: usuario@exemplo.com → "usuario")
   const initialName = user?.email ? user.email.split('@')[0] : '';
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(user?.email || '');
@@ -28,23 +28,22 @@ export default function EditProfileScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert('⚠️ Atenção', 'O nome não pode estar vazio.');
+      Alert.alert('⚠️ ' + t('editProfile.alertTitle'), t('editProfile.emptyName'));
       return;
     }
 
     if (!email.includes('@')) {
-      Alert.alert('❌ Erro', 'E-mail inválido.');
+      Alert.alert('❌ ' + t('editProfile.errorTitle'), t('editProfile.invalidEmail'));
       return;
     }
 
     setIsLoading(true);
     try {
-      // Atualiza o usuário (simulação — você pode expandir o AuthContext depois)
       await updateUser({ email });
-      Alert.alert('✅ Sucesso', 'Perfil atualizado com sucesso!');
-      navigation.goBack(); // Volta para a tela de Perfil
+      Alert.alert('✅ ' + t('editProfile.successTitle'), t('editProfile.successMessage'));
+      navigation.goBack();
     } catch (error) {
-      Alert.alert('❌ Erro', 'Não foi possível salvar as alterações.');
+      Alert.alert('❌ ' + t('editProfile.errorTitle'), t('editProfile.saveError'));
     } finally {
       setIsLoading(false);
     }
@@ -63,12 +62,12 @@ export default function EditProfileScreen() {
         ]}
       >
         <Text style={[styles.title, { color: colors.primary }]}>
-          ✏️ Editar Perfil
+          ✏️ {t('editProfile.title')}
         </Text>
 
         <TextInput
           style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
-          placeholder="Nome"
+          placeholder={t('editProfile.namePlaceholder')}
           placeholderTextColor={colors.text}
           value={name}
           onChangeText={setName}
@@ -76,7 +75,7 @@ export default function EditProfileScreen() {
 
         <TextInput
           style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
-          placeholder="E-mail"
+          placeholder={t('editProfile.emailPlaceholder')}
           placeholderTextColor={colors.text}
           value={email}
           onChangeText={setEmail}
@@ -90,15 +89,13 @@ export default function EditProfileScreen() {
             disabled={isLoading}
             style={[
               styles.saveButton,
-              {
-                backgroundColor: isLoading ? '#ccc' : colors.primary,
-              },
+              { backgroundColor: isLoading ? '#ccc' : colors.primary },
             ]}
           >
             {isLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>Salvar</Text>
+              <Text style={styles.buttonText}>{t('editProfile.saveButton')}</Text>
             )}
           </TouchableOpacity>
 
@@ -107,7 +104,7 @@ export default function EditProfileScreen() {
             style={[styles.cancelButton, { borderColor: colors.text }]}
           >
             <Text style={[styles.cancelButtonText, { color: colors.text }]}>
-              Cancelar
+              {t('editProfile.cancelButton')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -117,12 +114,8 @@ export default function EditProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  content: { flex: 1 },
   title: {
     fontSize: 28,
     fontWeight: 'bold',

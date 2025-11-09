@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
 import { MotoStatus } from '../types/Moto';
 import { Picker } from '@react-native-picker/picker';
+import { useTranslation } from 'react-i18next'; // 👈 Importa o i18n
 
 // Importe o serviço atualizado que chama a API
 import { criarMoto } from '../services/motoService';
@@ -26,6 +27,7 @@ function validarPlaca(placa: string): boolean {
 }
 
 export function MotoFormScreen() {
+  const { t } = useTranslation(); // 👈 Hook de tradução
   const { colors } = useTheme();
   const navigation = useNavigation();
 
@@ -33,9 +35,8 @@ export function MotoFormScreen() {
   const [status, setStatus] = useState<MotoStatus>('disponível');
   const [motivo, setMotivo] = useState('');
   const [imagem, setImagem] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false); // ⭐ Novo estado de loading
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Função para selecionar imagem
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -46,14 +47,13 @@ export function MotoFormScreen() {
     }
   };
 
-  // Função para salvar moto via API
   const handleSalvar = async () => {
     if (!validarPlaca(placa)) {
-      Alert.alert('❌ Placa Inválida', 'Use o formato ABC1D23.');
+      Alert.alert('❌ ' + t('motoForm.invalidPlateTitle'), t('motoForm.invalidPlateMsg'));
       return;
     }
 
-    setIsLoading(true); // ⭐ Ativa loading
+    setIsLoading(true);
 
     try {
       const novaMoto: Omit<Moto, 'id'> = {
@@ -63,93 +63,78 @@ export function MotoFormScreen() {
         imagem,
       };
 
-      await criarMoto(novaMoto); // ⭐ Chamada à API
+      await criarMoto(novaMoto);
 
-      Alert.alert('✅ Sucesso', 'Moto cadastrada com sucesso!');
-      
-      // Limpa formulário e volta para lista
+      Alert.alert('✅ ' + t('motoForm.successTitle'), t('motoForm.successMsg'));
+
       setPlaca('');
       setStatus('disponível');
       setMotivo('');
       setImagem(undefined);
-      
-      navigation.navigate('listademotos' as never); // Navega de volta
 
+      navigation.navigate('listademotos' as never);
     } catch (error) {
       console.error('Erro ao salvar moto:', error);
-      Alert.alert(
-        '❌ Erro',
-        'Não foi possível salvar a moto. Verifique sua conexão ou tente novamente.'
-      );
+      Alert.alert('❌ ' + t('motoForm.errorTitle'), t('motoForm.errorMsg'));
     } finally {
-      setIsLoading(false); // ⭐ Desativa loading, mesmo se der erro
+      setIsLoading(false);
     }
   };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.title, { color: colors.primary }]}>
-        Cadastrar Moto 🛠️
+        {t('motoForm.title')}
       </Text>
 
       <TextInput
-        placeholder="Placa da moto (ABC1D23)"
+        placeholder={t('motoForm.platePlaceholder')}
         value={placa}
         onChangeText={setPlaca}
-        style={[
-          styles.input,
-          { backgroundColor: colors.card, color: colors.text },
-        ]}
+        style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
         placeholderTextColor={colors.text}
         autoCapitalize="characters"
         maxLength={7}
       />
 
-      <Text style={[styles.label, { color: colors.text }]}>Status:</Text>
+      <Text style={[styles.label, { color: colors.text }]}>
+        {t('motoForm.status')}
+      </Text>
       <Picker
         selectedValue={status}
         onValueChange={(v) => setStatus(v as MotoStatus)}
-        style={[
-          styles.picker,
-          { backgroundColor: colors.card, color: colors.text },
-        ]}
+        style={[styles.picker, { backgroundColor: colors.card, color: colors.text }]}
         dropdownIconColor={colors.text}
       >
-        <Picker.Item label="Disponível" value="disponível" />
-        <Picker.Item label="Alugada" value="alugada" />
-        <Picker.Item label="Parada" value="parada" />
-        <Picker.Item label="Quebrada" value="quebrada" />
+        <Picker.Item label={t('motoForm.available')} value="disponível" />
+        <Picker.Item label={t('motoForm.rented')} value="alugada" />
+        <Picker.Item label={t('motoForm.stopped')} value="parada" />
+        <Picker.Item label={t('motoForm.broken')} value="quebrada" />
       </Picker>
 
       <TextInput
-        placeholder="Motivo (se necessário)"
+        placeholder={t('motoForm.reasonPlaceholder')}
         value={motivo}
         onChangeText={setMotivo}
-        style={[
-          styles.input,
-          { backgroundColor: colors.card, color: colors.text },
-        ]}
+        style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
         placeholderTextColor={colors.text}
       />
 
       {imagem && <Image source={{ uri: imagem }} style={styles.image} />}
 
       <TouchableOpacity style={styles.button} onPress={pickImage}>
-        <Text style={styles.buttonText}>📸 Selecionar Imagem</Text>
+        <Text style={styles.buttonText}>📸 {t('motoForm.pickImage')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[
-          styles.saveButton,
-          { backgroundColor: isLoading ? '#ccc' : colors.primary },
-        ]}
+        style={[styles.saveButton, { backgroundColor: isLoading ? '#ccc' : colors.primary }]}
         onPress={handleSalvar}
-        disabled={isLoading} // ⭐ Desabilita durante loading
+        disabled={isLoading}
       >
         {isLoading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.saveButtonText}>✅ Salvar Moto</Text>
+          <Text style={styles.saveButtonText}>✅ {t('motoForm.save')}</Text>
         )}
       </TouchableOpacity>
     </View>
