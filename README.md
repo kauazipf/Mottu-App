@@ -131,23 +131,12 @@ npx expo start
 
 ---
 
-## 🎨 Protótipo no Figma
-
-Você pode visualizar os mockups das telas geradas por IA no Figma:
-
-👉 [Acessar protótipo no Figma]([[https://www.figma.com/file/SEU-LINK-AQUI/Mottu-P%C3%A1tio-Inteligente-Mockup](https://www.figma.com/design/jcaofnnroEDitnYHUZA0T1/Protótipo-da-MonitoringMottu?node-id=0-1&p=f&m=draw)](https://www.figma.com/design/jcaofnnroEDitnYHUZA0T1/Protótipo-da-MonitoringMottu?node-id=0-1&p=f&m=draw))
-
----
-
 ## 👥 Autoria
 
-- **Nome:** Caetano Matos Penafiel 
-- **RM:** 557984
+- **Nome:** Caetano Matos Penafiel - **RM:** 557984
   
-- **Nome:** Kauã Fermino Zipf
-- **RM:** 558957
+- **Nome:** Kauã Fermino Zipf - **RM:** 558957
   
-- **Nome:** Victor Egídio Lira 
-- **RM:** 556653
+- **Nome:** Victor Egídio Lira - **RM:** 556653
   
 - Projeto desenvolvido como parte do Challenge FIAP + Mottu 2025
