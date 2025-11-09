@@ -5,38 +5,44 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'react-native-gesture-handler';
+import * as Notifications from 'expo-notifications';
 
 import { View, ActivityIndicator, Text } from 'react-native';
+
+import './src/i18n';
 
 // Telas públicas
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 
-// Telas protegidas — ✅ REMOVA AS CHAVES (export default)
-import {HomeScreen} from './src/screens/HomeScreen';
-import {MotoListScreen} from './src/screens/MotoListScreen';
-import {MotoFormScreen }from './src/screens/MotoFormScreen';
-import {MotoDetailScreen} from './src/screens/MotoDetailScreen';
+// Telas protegidas
+import { HomeScreen } from './src/screens/HomeScreen';
+import { MotoListScreen } from './src/screens/MotoListScreen';
+import { MotoFormScreen } from './src/screens/MotoFormScreen';
+import { MotoDetailScreen } from './src/screens/MotoDetailScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 
-// Componente de Logout (opcional, mas recomendado no menu)
+// Componentes
 import { LogoutButton } from './src/components/LogoutButtom';
 
 // Contextos
 import { ThemeProvider, useTheme } from './src/contexts/ThemeContext';
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 
-// Navegadores
+// Serviços
+import api from './src/services/apiService';
+import { registerForPushNotificationsAsync } from './src/services/pushNotifications';
+
+// Navegação
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-// Custom Drawer Content — com tema dinâmico e botão de logout
+// Custom Drawer
 function CustomDrawerContent(props: any) {
   const { colors } = useTheme();
-
   return (
     <DrawerContentScrollView
       {...props}
@@ -51,7 +57,7 @@ function CustomDrawerContent(props: any) {
   );
 }
 
-// Componente que decide qual navegação mostrar
+// Decide qual rota mostrar (login ou app)
 function RootNavigator() {
   const { user, isLoading } = useAuth();
 
@@ -123,6 +129,27 @@ function RootNavigator() {
 }
 
 export default function App() {
+  // ✅ Adicionando o useEffect aqui para registrar as notificações
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(async (token) => {
+      if (token) {
+        try {
+          await api.post('/users/push-token', { token });
+          console.log('Token enviado ao backend:', token);
+        } catch (error) {
+          console.log('Erro ao enviar token:', error);
+        }
+      }
+    });
+
+    // Listener para notificações recebidas enquanto o app está aberto
+    const subscription = Notifications.addNotificationReceivedListener((notification) => {
+      console.log('📩 Notificação recebida em primeiro plano:', notification);
+    });
+
+    return () => subscription.remove();
+  }, []);
+
   return (
     <AuthProvider>
       <ThemeProvider>
