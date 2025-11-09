@@ -1,0 +1,103 @@
+{
+  "about": {
+    "title": "Sobre o App",
+    "description": "Este aplicativo foi desenvolvido para gerenciar a frota de motos da Mottu.",
+    "commitLabel": "Versão (Commit):",
+    "footer": "© 2025 Mottu App. Todos os direitos reservados."
+  },
+
+  "login": {
+    "title": "Login",
+    "subtitle": "Acesse sua conta para gerenciar o pátio",
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Senha",
+    "loginButton": "Entrar",
+    "noAccount": "Não tem conta? Cadastre-se",
+    "themeToggle": "🌗 Alternar Tema",
+    "alertTitle": "⚠️ Atenção",
+    "fillAll": "Preencha todos os campos.",
+    "errorTitle": "❌ Erro",
+    "invalidEmail": "E-mail inválido.",
+    "invalidCredentials": "Credenciais inválidas. Tente novamente."
+  },
+
+  "register": {
+    "title": "Cadastro",
+    "subtitle": "Crie sua conta para acessar o sistema",
+    "namePlaceholder": "Nome Completo",
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Senha (mín. 6 caracteres)",
+    "registerButton": "Cadastrar",
+    "haveAccount": "Já tem conta? Faça login",
+    "alertTitle": "⚠️ Atenção",
+    "fillAll": "Preencha todos os campos.",
+    "errorTitle": "❌ Erro",
+    "invalidEmail": "E-mail inválido.",
+    "shortPassword": "A senha deve ter pelo menos 6 caracteres.",
+    "registerFail": "Não foi possível criar a conta. Tente novamente."
+  },
+
+  "profile": {
+    "title": "👤 Perfil",
+    "name": "Nome",
+    "email": "E-mail",
+    "status": "Status da Conta",
+    "active": "Ativo",
+    "editProfile": "✏️ Editar Perfil",
+    "logout": "🚪 Sair da Conta",
+    "logoutConfirmTitle": "Sair",
+    "logoutConfirmMessage": "Tem certeza que deseja sair da sua conta?",
+    "logoutCancel": "Cancelar",
+    "logoutConfirm": "Sair"
+  },
+
+  "editProfile": {
+    "title": "✏️ Editar Perfil",
+    "namePlaceholder": "Nome",
+    "emailPlaceholder": "E-mail",
+    "saveButton": "Salvar",
+    "cancelButton": "Cancelar",
+    "alertEmptyName": "O nome não pode estar vazio.",
+    "alertInvalidEmail": "E-mail inválido.",
+    "alertSuccess": "Perfil atualizado com sucesso!",
+    "alertError": "Não foi possível salvar as alterações."
+  },
+
+  "motoList": {
+    "title": "🏍️ Lista de Motos",
+    "empty": "Nenhuma moto cadastrada.",
+    "status": "Status",
+    "reason": "Motivo"
+  },
+
+  "motoDetail": {
+    "title": "Editar Moto 🛠️",
+    "plate": "Placa",
+    "status": "Status",
+    "reason": "Motivo",
+    "changeImage": "Alterar Imagem",
+    "save": "Salvar Alterações",
+    "saveAndBack": "Salvar e voltar à Home",
+    "duplicate": "Duplicar Moto",
+    "delete": "Excluir Moto",
+    "alertInvalidPlate": "A placa deve estar no formato ABC1D23.",
+    "alertUpdated": "Moto atualizada!",
+    "alertDeleted": "A moto foi removida do sistema.",
+    "alertDuplicated": "Uma cópia da moto foi criada."
+  },
+
+  "motoForm": {
+    "title": "Cadastrar Moto 🛠️",
+    "platePlaceholder": "Placa da moto (ABC1D23)",
+    "status": "Status",
+    "reasonPlaceholder": "Motivo (se necessário)",
+    "selectImage": "📸 Selecionar Imagem",
+    "saveButton": "✅ Salvar Moto",
+    "alertInvalidPlate": "❌ Placa Inválida",
+    "alertInvalidPlateMsg": "Use o formato ABC1D23.",
+    "alertSuccess": "✅ Sucesso",
+    "alertSuccessMsg": "Moto cadastrada com sucesso!",
+    "alertError": "❌ Erro",
+    "alertErrorMsg": "Não foi possível salvar a moto. Verifique sua conexão ou tente novamente."
+  }
+}
